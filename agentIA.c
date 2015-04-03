@@ -12,15 +12,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-// caso dê erro instalação = $sudo apt-get install ncurses
-//#include <curses.h>
-#define DIM 4
+#define DIM 5
 
 // Protótipos:
 void imprimeVagas();
 int contaVagas();
 void buscaVagaProfundidade();
-void buscaVagaProfundidade_2();
 
 
 // matriz do estacionamento
@@ -36,7 +33,7 @@ int main(int argc, char** argv) {
     srand(time(NULL));
 
     //escrevendo na Matriz
-    for (linha = 0; linha < DIM; linha++)
+    for (linha = 0; linha < DIM; linha++) {
         for (coluna = 0; coluna < DIM; coluna++) {
             //printf("Elemento [%d][%d]: ", linha + 1, coluna + 1);
             //scanf("%d", &matriz[linha][coluna]);
@@ -44,7 +41,7 @@ int main(int argc, char** argv) {
             // printf("\n");
             //printf("Um numero entre 0 e 1: %d\n", rand() % 2);
         }
-
+    }
 
     system("clear"); //clears the screen
     imprimeVagas();
@@ -52,11 +49,9 @@ int main(int argc, char** argv) {
 
     // chegada de carros
     while (vagas > 0) {
-        printf("Chega carro:\n");
-        //buscaVagaProfundidade();
-        buscaVagaProfundidade_2();
+        printf("Carro na entrada:\n");
+        buscaVagaProfundidade();
         vagas = contaVagas();
-
     }
 
     return (EXIT_SUCCESS);
@@ -67,7 +62,7 @@ void imprimeVagas() {
 
     printf("Estacionamento:\n");
     for (linha = 0; linha < DIM; linha++) {
-        printf("%7c", linha + 65);
+        printf("\t%c", linha + 65);
     }
     printf("\n");
     // imprimindo a matriz na tela
@@ -75,16 +70,12 @@ void imprimeVagas() {
         for (coluna = 0; coluna < DIM; coluna++) {
             if (coluna == 0) {
                 printf("%d", linha);
-                printf("%6d", matriz[linha][coluna]);
+                printf("\t%d", matriz[linha][coluna]);
             } else {
-                printf("%7d", matriz[linha][coluna]);
+                printf("\t%d", matriz[linha][coluna]);
             }
         }
-
-
         printf("\n"); //após cada linha ser impressa, um salto de linha
-
-        //sleep(2);
     }
 }
 
@@ -108,7 +99,7 @@ int contaVagas() {
     return count;
 }
 
-void buscaVagaProfundidade_2() {
+void buscaVagaProfundidade() {
     int linha, coluna = 0, count = 0;
 
     printf("\nBUSCA EM PROFUNDIDADE\n");
@@ -130,7 +121,7 @@ void buscaVagaProfundidade_2() {
 
     coluna++;
 
-    for (linha = DIM - 1; coluna < DIM, linha >= 0; coluna++) {
+    for (linha = DIM - 1; linha >= 0; coluna++) {
         // printf("dentro do for");
         if (matriz[linha][coluna] == 0) {
             printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
@@ -157,45 +148,4 @@ void buscaVagaProfundidade_2() {
             }
         }
     }
-}
-
-void buscaVagaProfundidade() {
-    int linha, coluna, count = 0;
-
-    printf("\nBusca em profundidade\n");
-
-
-    for (coluna = 0; coluna < DIM; coluna++) {
-        // pares - descendo
-        if (coluna % 2 == 0) {
-            for (linha = 0; linha < DIM; linha++) {
-                if (matriz[linha][coluna] == 0) {
-                    printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
-                    sleep(2);
-                    printf("Carro estacionado na vaga: %c%d\n", coluna + 65, linha);
-                    matriz[linha][coluna] = 1; // estaciona na primeira vaga encontrada
-                    count++;
-                    sleep(2);
-                    break;
-                }
-            }
-        } else {
-            //ímpares
-            for (linha = DIM - 1; linha >= 0; linha--) {
-                if (matriz[linha][coluna] == 0) {
-                    printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
-                    sleep(2);
-                    printf("Carro estacionado na vaga: %c%d\n", coluna + 65, linha);
-                    matriz[linha][coluna] = 1; // estaciona na primeira vaga encontrada
-                    count++;
-                    sleep(2);
-                    break;
-                }
-            }
-        }
-
-        if (count == 1)
-            break;
-    }
-    imprimeVagas();
 }
