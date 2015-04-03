@@ -14,15 +14,13 @@
 #include <unistd.h>
 // caso dê erro instalação = $sudo apt-get install ncurses
 //#include <curses.h>
-#define DIM 5
+#define DIM 4
 
 // Protótipos:
 void imprimeVagas();
 int contaVagas();
 void buscaVagaProfundidade();
-/*
 void buscaVagaProfundidade_2();
-*/
 
 
 // matriz do estacionamento
@@ -55,10 +53,8 @@ int main(int argc, char** argv) {
     // chegada de carros
     while (vagas > 0) {
         printf("Chega carro:\n");
-        buscaVagaProfundidade();
-/*
+        //buscaVagaProfundidade();
         buscaVagaProfundidade_2();
-*/
         vagas = contaVagas();
 
     }
@@ -103,20 +99,19 @@ int contaVagas() {
     }
     if (count > 0) {
         if (count == 1)
-            printf("%d vaga no estacionamento\n", count);
+            printf("\n%d vaga no estacionamento\n", count);
         else
-            printf("%d vagas no estacionamento\n", count);
+            printf("\n%d vagas no estacionamento\n", count);
     } else
         printf("\nLamentamos, mas não há vagas no estacionamento!\n");
 
     return count;
 }
-/*
 
 void buscaVagaProfundidade_2() {
     int linha, coluna = 0, count = 0;
 
-    printf("\nBusca em profundidade\n");
+    printf("\nBUSCA EM PROFUNDIDADE\n");
 
     if (coluna == 0) {
         for (linha = 0; linha < DIM; linha++) {
@@ -135,10 +130,8 @@ void buscaVagaProfundidade_2() {
 
     coluna++;
 
-    printf("coluna: %d", coluna);
-    //for (linha = DIM - 1; linha >= 0; linha--, coluna++) {
-    for (linha = DIM - 1; coluna < DIM - 2; coluna++) {
-        printf("dentro do for");
+    for (linha = DIM - 1; coluna < DIM, linha >= 0; coluna++) {
+        // printf("dentro do for");
         if (matriz[linha][coluna] == 0) {
             printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
             sleep(2);
@@ -149,14 +142,22 @@ void buscaVagaProfundidade_2() {
             imprimeVagas();
             return;
         }
-        if (coluna == DIM)
+        if (coluna == DIM - 1) {
             linha--;
-        printf("linha: %d", linha);
+            coluna = 1;
+            if (matriz[linha][coluna] == 0) {
+                printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
+                sleep(2);
+                printf("Carro estacionado na vaga: %c%d\n", coluna + 65, linha);
+                matriz[linha][coluna] = 1; // estaciona na primeira vaga encontrada
+                count++;
+                sleep(2);
+                imprimeVagas();
+                return;
+            }
+        }
     }
-
-    imprimeVagas();
 }
-*/
 
 void buscaVagaProfundidade() {
     int linha, coluna, count = 0;
