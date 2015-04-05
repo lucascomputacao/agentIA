@@ -24,23 +24,18 @@ typedef struct lista Lista;
 
 Lista* Lista_A_estrela = NULL;
 
-
 // Protótipos:
 void geraMatriz();
 void imprimeVagas();
 int contaVagas();
 void buscaVagaProfundidade();
 void list_A_estrela();
-//void inicia(node *LISTA);
 int calc_custo_total(int linha, int coluna);
-//void insereListaOrdenada(node LISTA, int linha, int coluna, int custo_total);
 void insereListaOrdenada(int linha, int coluna, int custo_total);
-//Lista* inicializa(void);
 void imprime_rec();
 void busca_vaga_estrela(Lista* l);
 void loopProfundidade();
 void loopAEstrela();
-
 
 // matriz do estacionamento
 int matriz[DIM][DIM];
@@ -81,6 +76,7 @@ int main(int argc, char** argv) {
                 geraMatriz();
                 imprimeVagas();
                 break;
+
             case 0:
                 break;
 
@@ -115,15 +111,10 @@ void loopAEstrela() {
 
 void geraMatriz() {
     int linha, coluna;
-
     //escrevendo na Matriz
     for (linha = 0; linha < DIM; linha++) {
         for (coluna = 0; coluna < DIM; coluna++) {
-            //printf("Elemento [%d][%d]: ", linha + 1, coluna + 1);
-            //scanf("%d", &matriz[linha][coluna]);
             matriz[linha][coluna] = rand() % 2;
-            // printf("\n");
-            //printf("Um numero entre 0 e 1: %d\n", rand() % 2);
         }
     }
 }
@@ -282,9 +273,6 @@ void insereListaOrdenada(int linha, int coluna, int custo_total) {
 void imprime_rec(Lista* l) {
     if (l == NULL)
         return;
-    //fprintf(stderr, "\nlinha:%d|coluna:%d|custoTotal:%d", l->linha, l->coluna, l->custo_total);
-    //printf(stderr, "\nprox: %p", l->prox);
-    // sleep(2);
     imprime_rec(l->prox);
 }
 
@@ -296,9 +284,9 @@ void busca_vaga_estrela(Lista* l) {
 
     linha = l->linha;
     coluna = l->coluna;
-    
+
     printf("\nBUSCA A*\n");
-    
+
     if (matriz[linha][coluna] == 0) {
         printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
         sleep(2);
