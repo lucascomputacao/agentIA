@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#define DIM 3
+#define DIM 4
 
 // estrutura para abstrair a agenda do algoritmo A*
 
@@ -38,6 +38,8 @@ void insereListaOrdenada(int linha, int coluna, int custo_total);
 //Lista* inicializa(void);
 void imprime_rec();
 void busca_vaga_estrela(Lista* l);
+void loopProfundidade();
+void loopAEstrela();
 
 
 // matriz do estacionamento
@@ -47,37 +49,69 @@ int matriz[DIM][DIM];
  * 
  */
 int main(int argc, char** argv) {
-    int vagas = 0;
+    int continuar = 1;
 
     // "Planta" o random
     srand(time(NULL));
-
     geraMatriz();
     system("clear"); //clears the screen
     imprimeVagas();
-    vagas = contaVagas();
-    list_A_estrela();
 
+    do {
+        printf("\n\tEstacionamento agentIA:\n\n");
+        printf("1. Buscar vaga em profundidade\n");
+        printf("2. Buscar vaga A*\n");
+        printf("3. Reiniciar Estacionamento\n");
+        printf("0. Sair\n");
 
-    // chegada de carros
-    while (vagas > 0) {
-        printf("Carro na entrada:\n");
-        //        buscaVagaProfundidade();
-        sleep(2);
-        busca_vaga_estrela(Lista_A_estrela);
-        vagas = contaVagas();
-    }
+        scanf("%d", &continuar);
+
+        system("clear"); //clears the screen
+
+        switch (continuar) {
+            case 1:
+                loopProfundidade();
+                break;
+
+            case 2:
+                loopAEstrela();
+                break;
+
+            case 3:
+                geraMatriz();
+                imprimeVagas();
+                break;
+            case 0:
+                break;
+
+            default:
+                printf("Digite uma opcao valida\n");
+        }
+    } while (continuar);
 
     return (EXIT_SUCCESS);
 }
 
-/* função de inicialização: retorna uma lista vazia */
-
-/*
-Lista* inicializa(void) {
-    return NULL;
+void loopProfundidade() {
+    int vagas;
+    while (vagas > 0) {
+        printf("Carro na entrada:\n");
+        buscaVagaProfundidade();
+        sleep(2);
+        vagas = contaVagas();
+    }
 }
- */
+
+void loopAEstrela() {
+    int vagas;
+    while (vagas > 0) {
+        printf("Carro na entrada:\n");
+        sleep(2);
+        list_A_estrela();
+        busca_vaga_estrela(Lista_A_estrela);
+        vagas = contaVagas();
+    }
+}
 
 void geraMatriz() {
     int linha, coluna;
@@ -159,7 +193,7 @@ void buscaVagaProfundidade() {
     coluna++;
 
     for (linha = DIM - 1; linha >= 0; coluna++) {
-        // printf("dentro do for");
+
         if (matriz[linha][coluna] == 0) {
             printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
             sleep(2);
@@ -189,22 +223,14 @@ void buscaVagaProfundidade() {
 
 void list_A_estrela() {
     int linha, coluna, custo_total;
-    printf("\ndentro de list_A_estrela\n");
     //lendo valores da Matriz
     for (linha = 0; linha < DIM; linha++) {
         for (coluna = 0; coluna < DIM; coluna++) {
-            //matriz[linha][coluna] = rand() % 2;
-            fprintf(stderr, "\ncalculando custo");
             custo_total = calc_custo_total(linha, coluna);
-            fprintf(stderr, "\ncusto calculado: %d\t linha:%d\t coluna:%d\n", custo_total, linha, coluna);
             insereListaOrdenada(linha, coluna, custo_total);
-            fprintf(stderr, "\ndepois da inserção\n");
-
             imprime_rec(Lista_A_estrela);
-            // vet_A[linha][coluna] = 
         }
     }
-    fprintf(stderr, "\nsaindo da list_A_estrela");
 }
 
 int calc_custo_total(int linha, int coluna) {
@@ -216,7 +242,7 @@ int calc_custo_total(int linha, int coluna) {
         return result = linha;
     }
     // custo total =  deslocamento + distancia em linha reta
-    return result = (linha + coluna) + (linha);
+    return result = (linha + coluna) + (coluna);
 }
 
 void insereListaOrdenada(int linha, int coluna, int custo_total) {
@@ -231,10 +257,8 @@ void insereListaOrdenada(int linha, int coluna, int custo_total) {
 
     // iserção em lista vazia
     if (Lista_A_estrela == NULL) {
-        fprintf(stderr, "\nlista vazia");
         Lista_A_estrela = novo;
         novo->prox = NULL;
-        //sleep(4);
         imprime_rec(Lista_A_estrela);
         return;
     }
@@ -245,7 +269,6 @@ void insereListaOrdenada(int linha, int coluna, int custo_total) {
     }
     //insere elemento 
     if (ant == NULL) { // insere elemento no início 
-        fprintf(stderr, "\ninicio");
         novo->prox = Lista_A_estrela;
         Lista_A_estrela = novo;
         novo->prox = NULL;
@@ -259,8 +282,8 @@ void insereListaOrdenada(int linha, int coluna, int custo_total) {
 void imprime_rec(Lista* l) {
     if (l == NULL)
         return;
-    fprintf(stderr, "\nlinha:%d|coluna:%d|custoTotal:%d", l->linha, l->coluna, l->custo_total);
-    fprintf(stderr, "\nprox: %p", l->prox);
+    //fprintf(stderr, "\nlinha:%d|coluna:%d|custoTotal:%d", l->linha, l->coluna, l->custo_total);
+    //printf(stderr, "\nprox: %p", l->prox);
     // sleep(2);
     imprime_rec(l->prox);
 }
@@ -273,10 +296,16 @@ void busca_vaga_estrela(Lista* l) {
 
     linha = l->linha;
     coluna = l->coluna;
+    
+    printf("\nBUSCA A*\n");
+    
     if (matriz[linha][coluna] == 0) {
+        printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
+        sleep(2);
         matriz[linha][coluna] = 1; //estaciona o carro na vaga
         printf("Carro estacionado na vaga: %c%d\n", coluna + 65, linha);
         imprimeVagas();
+        sleep(2);
         return;
     } else {
         busca_vaga_estrela(l->prox);
