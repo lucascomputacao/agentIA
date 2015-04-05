@@ -1,6 +1,6 @@
 /* 
  * File:   agentIA.c
- * Author: Igor Paim, Lucas Borges, Tiago Pacheco
+ * Author: Igor Paim, Lucas Borges, Thiago Pacheco
  * 
  * Projeto de Agente Inteligente para localizar as vagas mais próximas da entrada
  * no estacionamento e indicá-las ao motorista que chega ao local.
