@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#define DIM 4
+#define DIM 5   
 
 // estrutura para abstrair a agenda do algoritmo A*
 
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
     imprimeVagas();
 
     do {
-        printf("\n\tEstacionamento agentIA:\n\n");
+        printf("\n\tEstacionamento agentIAchaVagaPraVocê:\n\n");
         printf("1. Buscar vaga em profundidade\n");
         printf("2. Buscar vaga A*\n");
         printf("3. Reiniciar Estacionamento\n");
@@ -122,7 +122,7 @@ void geraMatriz() {
 void imprimeVagas() {
     int linha, coluna;
 
-    printf("Estacionamento:\n");
+    printf("\n\tEstacionamento agentIAchaVagaPraVocê\n\nEntrada:\n");
     for (linha = 0; linha < DIM; linha++) {
         printf("\t%c", linha + 65);
     }
@@ -163,11 +163,12 @@ int contaVagas() {
 
 void buscaVagaProfundidade() {
     int linha, coluna = 0, count = 0;
-
-    printf("\nBUSCA EM PROFUNDIDADE\n");
-
+    if(!contaVagas()){
+        return;
+    }
     if (coluna == 0) {
         for (linha = 0; linha < DIM; linha++) {
+            printf("\nBUSCA EM PROFUNDIDADE\n");
             if (matriz[linha][coluna] == 0) {
                 printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
                 sleep(2);
@@ -184,7 +185,7 @@ void buscaVagaProfundidade() {
     coluna++;
 
     for (linha = DIM - 1; linha >= 0; coluna++) {
-
+        printf("\nBUSCA EM PROFUNDIDADE\n");
         if (matriz[linha][coluna] == 0) {
             printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
             sleep(2);
@@ -196,7 +197,7 @@ void buscaVagaProfundidade() {
             return;
         }
         if (coluna == DIM - 1) {
-            linha--;
+                linha--;
             coluna = 1;
             if (matriz[linha][coluna] == 0) {
                 printf("\nVaga encontrada: %c%d\n", coluna + 65, linha);
